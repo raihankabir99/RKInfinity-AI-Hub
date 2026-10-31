@@ -74,7 +74,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       setIsSubmitted(true);
 
       if (onShowToast) {
-        onShowToast('success', 'Inquiry Sent', 'Your inquiry has been submitted successfully.');
+        onShowToast('info', 'Demo Preview Only', 'Your message was validated locally but was not sent or stored.');
       }
     }, 600);
   };
@@ -118,9 +118,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               </div>
 
               <div className="text-center space-y-2">
-                <h3 className="text-2xl font-bold text-white">Inquiry Successfully Processed</h3>
+                <h3 className="text-2xl font-bold text-white">Demo Form Preview</h3>
                 <p className="text-slate-300 text-sm max-w-md mx-auto">
-                  Thank you, <strong className="text-white">{submittedData.name}</strong>. Your inquiry regarding <strong className="text-cyan-300">"{submittedData.subject}"</strong> has been submitted.
+                  Thank you, <strong className="text-white">{submittedData.name}</strong>. Your inquiry regarding <strong className="text-cyan-300">"{submittedData.subject}"</strong> passed the form validation demo.
                 </p>
               </div>
 
@@ -130,7 +130,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <span>Inquiry Confirmation:</span>
                 </div>
                 <p className="text-slate-400">
-                  Your message has been logged and dispatched to <code className="text-cyan-300 font-mono">contact@rkinfinity.ai</code>.
+                  This is a front-end demo. Your message was not emailed, saved, or sent to a server.
                 </p>
               </div>
 
@@ -276,7 +276,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
               <div className="text-center text-[11px] text-slate-400 pt-1 flex items-center justify-center gap-1">
                 <Lock className="w-3 h-3 text-cyan-400" />
-                <span>Encrypted & secure communication. We respond within 24 hours.</span>
+                <span>Demo form only — no message is transmitted or stored.</span>
               </div>
             </form>
           )}
