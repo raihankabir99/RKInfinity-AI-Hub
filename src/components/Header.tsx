@@ -74,9 +74,9 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="#home"
             onClick={(e) => handleNavClick(e, '#home', 'home')}
-            className="flex items-center gap-3 group"
+            className="flex min-w-0 items-center gap-2 sm:gap-3 group"
           >
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-fuchsia-500 p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md shadow-cyan-500/20">
+            <div className="relative flex shrink-0 items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-fuchsia-500 p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md shadow-cyan-500/20">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center overflow-hidden">
                 <svg
                   viewBox="0 0 24 24"
@@ -107,10 +107,10 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+              <span className="font-extrabold text-base sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
                 RKInfinity <span className="bg-gradient-to-r from-cyan-400 via-indigo-400 to-pink-500 bg-clip-text text-transparent font-black">AI Hub</span>
               </span>
-              <span className="text-[10px] text-slate-400 tracking-wider font-semibold uppercase -mt-0.5">
+              <span className="hidden xs:block text-[9px] sm:text-[10px] text-slate-400 tracking-wider font-semibold uppercase -mt-0.5">
                 Next-Gen AI Directory & Solutions
               </span>
             </div>
@@ -254,7 +254,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-cyan-950 border border-cyan-800 text-cyan-300 font-bold text-sm"
               >
                 <LayoutGrid className="w-4 h-4" />
-                <span>My User Dashboard</span>
+                <span>My Dashboard</span>
               </button>
             ) : (
               <button
