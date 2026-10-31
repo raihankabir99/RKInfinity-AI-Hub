@@ -58,9 +58,9 @@ function MainAppContent() {
   const [savedToolIds, setSavedToolIds] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem('rkinfinity_saved_tools');
-      return stored ? JSON.parse(stored) : ['chatgpt', 'gemini', 'claude'];
+      return stored ? JSON.parse(stored) : [];
     } catch {
-      return ['chatgpt', 'gemini', 'claude'];
+      return [];
     }
   });
 
