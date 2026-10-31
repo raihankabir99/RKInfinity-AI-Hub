@@ -55,7 +55,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     logout();
     onBackToLanding();
     if (onShowToast) {
-      onShowToast('info', 'Logged Out', 'Demo user session ended.');
+      onShowToast('info', 'Logged Out', 'Local session ended.');
     }
   };
 
@@ -95,15 +95,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-right hidden sm:flex">
             <div>
-              <span className="text-xs font-bold text-white block">{user?.name}</span>
-              <span className="text-[10px] font-semibold text-cyan-400 block">{user?.accountType}</span>
+              <span className="text-xs font-bold text-white block">{user?.name || 'Guest'}</span>
+              {user?.accountType && <span className="text-[10px] font-semibold text-cyan-400 block">{user.accountType}</span>}
             </div>
           </div>
-          <img
-            src={user?.avatarUrl}
-            alt={user?.name}
-            className="w-9 h-9 rounded-xl object-cover border border-cyan-500/40"
-          />
+          <div className="w-9 h-9 rounded-xl border border-cyan-500/40 bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 flex items-center justify-center text-cyan-300" aria-label="Profile placeholder">
+            <User className="w-5 h-5" />
+          </div>
         </div>
       </header>
 
