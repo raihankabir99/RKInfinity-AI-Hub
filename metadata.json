@@ -1,0 +1,6 @@
+{
+  "name": "RKInfinity AI Hub",
+  "description": "Discover the future of AI. Explore curated AI tools, innovative services, and unlock new possibilities with artificial intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
