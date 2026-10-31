@@ -19,12 +19,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
 
   // Form states
-  const [loginEmail, setLoginEmail] = useState('raihan@rkinfinity.ai');
-  const [loginPassword, setLoginPassword] = useState('password123');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
-  const [regName, setRegName] = useState('Raihan');
+  const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
@@ -48,9 +48,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
 
     setErrors({});
-    login(loginEmail, loginEmail.includes('raihan') ? 'Raihan' : undefined);
+    login(loginEmail);
     if (onShowToast) {
-      onShowToast('success', 'Logged In', `Welcome back, Raihan! Signed in as ${loginEmail}`);
+      onShowToast('info', 'Demo Session Started', `Local preview session for ${loginEmail}. No real account authentication is connected.`);
     }
     onClose();
   };
@@ -81,7 +81,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setErrors({});
     register(regName, regEmail);
     if (onShowToast) {
-      onShowToast('success', 'Account Created', `Welcome to RKInfinity AI Hub, ${regName}!`);
+      onShowToast('info', 'Demo Account Created', `A local preview profile was created for ${regName}. No real account was registered.`);
     }
     onClose();
   };
@@ -151,7 +151,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/50 flex items-start gap-2.5 text-xs text-cyan-200">
             <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-cyan-100">User Workspace Session:</strong> Signing in initializes your personal workspace preferences and notes.
+              <strong className="text-cyan-100">Demo Mode:</strong> Sign in and registration create a local preview session only. No real authentication or account is connected.
             </p>
           </div>
 
@@ -169,7 +169,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="email"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder="raihan@rkinfinity.ai"
+                    placeholder="name@example.com"
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/80"
                   />
                 </div>
@@ -214,7 +214,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
                 <button
                   type="button"
-                  onClick={() => alert('Password reset link sent to your registered email.')}
+                  onClick={() => onShowToast?.('info', 'Demo Mode', 'Password reset is unavailable because real email authentication is not connected.')}
                   className="text-cyan-400 hover:underline"
                 >
                   Forgot password?
@@ -243,7 +243,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="text"
                     value={regName}
                     onChange={(e) => setRegName(e.target.value)}
-                    placeholder="e.g. Raihan"
+                    placeholder="Enter your full name"
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/80"
                   />
                 </div>
@@ -261,7 +261,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="email"
                     value={regEmail}
                     onChange={(e) => setRegEmail(e.target.value)}
-                    placeholder="raihan@example.com"
+                    placeholder="name@example.com"
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/80"
                   />
                 </div>
