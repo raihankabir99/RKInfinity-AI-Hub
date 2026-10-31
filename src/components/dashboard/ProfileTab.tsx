@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, ShieldCheck, Calendar, Edit2, Save, Sparkles, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Calendar, Edit2, Save, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 interface ProfileTabProps {
@@ -40,21 +40,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({ onShowToast }) => {
       <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl space-y-6 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-slate-800">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <img
-                src={user?.avatarUrl}
-                alt={user?.name}
-                className="w-16 h-16 rounded-2xl object-cover border-2 border-cyan-500/50 shadow-lg"
-              />
-              <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" />
+            <div className="w-16 h-16 rounded-2xl border-2 border-cyan-500/50 bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 flex items-center justify-center text-cyan-300">
+              <User className="w-8 h-8" />
             </div>
 
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-xl font-extrabold text-white">{user?.name}</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800">
-                  {user?.accountType}
-                </span>
+                {user?.accountType && <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800">{user.accountType}</span>}
               </div>
               <p className="text-xs text-slate-400 mt-0.5">{user?.email}</p>
               <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
@@ -147,22 +140,8 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({ onShowToast }) => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
-              <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <span className="text-slate-400">Account Role</span>
-                <div className="font-semibold text-cyan-300 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                  <span>Workspace Administrator</span>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <span className="text-slate-400">Directory Access Level</span>
-                <div className="font-semibold text-emerald-300 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Full Unlimited Access</span>
-                </div>
-              </div>
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400">
+              Profile details are stored locally in this demo. Real authentication and server-backed profiles are not connected.
             </div>
           </div>
         )}
