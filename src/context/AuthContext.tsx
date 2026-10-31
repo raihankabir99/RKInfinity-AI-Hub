@@ -17,86 +17,61 @@ interface AuthContextType {
   resetWorkspaceData: () => void;
 }
 
-const DEFAULT_USER: UserProfile = {
-  id: 'usr_raihan_101',
-  name: 'Raihan',
-  email: 'raihan@rkinfinity.ai',
-  avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  accountType: 'Pro Member',
-  joinedDate: 'October 2026',
-  bio: 'AI Systems Architect & Prompt Engineer exploring multimodal models and zero-shot reasoning workflows.',
-};
-
-const DEFAULT_NOTES: PersonalNote[] = [
-  {
-    id: 'note_1',
-    title: 'Claude 3.7 System Prompt Optimization',
-    content: 'Always specify Constitutional AI directives when generating complex Rust zero-copy async buffer parsers. Use interactive Artifacts for live debugging.',
-    category: 'Prompt Engineering',
-    createdAt: '2026-10-28',
-    updatedAt: '2026-10-29',
-  },
-  {
-    id: 'note_2',
-    title: 'Gemini 1M Token Context Experiments',
-    content: 'Feeding 400 pages of legal PDF contracts into Gemini Flash 2.5 yielded 99.4% needle-in-a-haystack retrieval accuracy for clause auditing.',
-    category: 'Tool Notes',
-    createdAt: '2026-10-25',
-    updatedAt: '2026-10-26',
-  },
-  {
-    id: 'note_3',
-    title: 'Automated SEO & JSON-LD Pipeline Idea',
-    content: 'Build a webhook listener connecting Perplexity API to Schema.org generator for instant programmatic article markup.',
-    category: 'Workflow Draft',
-    createdAt: '2026-10-22',
-    updatedAt: '2026-10-22',
-  },
-];
-
-const DEFAULT_ACTIVITIES: UserActivityLog[] = [
-  { id: 'act_1', action: 'Saved to Favorites', target: 'Google Gemini', timestamp: '2 hours ago', type: 'bookmark' },
-  { id: 'act_2', action: 'Created Note', target: 'Claude 3.7 System Prompt Optimization', timestamp: '1 day ago', type: 'note' },
-  { id: 'act_3', action: 'Inquired Service', target: 'AI Website Development', timestamp: '2 days ago', type: 'inquiry' },
-  { id: 'act_4', action: 'Searched Directory', target: 'Multimodal Video Generators', timestamp: '3 days ago', type: 'search' },
-];
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const today = () => new Date().toISOString().split('T')[0];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
       const stored = localStorage.getItem('rkinfinity_user');
-      return stored ? JSON.parse(stored) : DEFAULT_USER;
+      if (!stored) return null;
+      const parsed = JSON.parse(stored) as UserProfile;
+      // Clear the old seeded demo profile instead of showing it to visitors.
+      if (parsed.id === 'usr_raihan_101' || parsed.email === 'raihan@rkinfinity.ai') {
+        localStorage.removeItem('rkinfinity_user');
+        return null;
+      }
+      return parsed;
     } catch {
-      return DEFAULT_USER;
+      localStorage.removeItem('rkinfinity_user');
+      return null;
     }
   });
 
   const [notes, setNotes] = useState<PersonalNote[]>(() => {
     try {
       const stored = localStorage.getItem('rkinfinity_user_notes');
-      return stored ? JSON.parse(stored) : DEFAULT_NOTES;
+      if (!stored) return [];
+      const parsed = JSON.parse(stored) as PersonalNote[];
+      const seededIds = ['note_1', 'note_2', 'note_3'];
+      const cleaned = parsed.filter((note) => !seededIds.includes(note.id));
+      localStorage.setItem('rkinfinity_user_notes', JSON.stringify(cleaned));
+      return cleaned;
     } catch {
-      return DEFAULT_NOTES;
+      localStorage.removeItem('rkinfinity_user_notes');
+      return [];
     }
   });
 
   const [activities, setActivities] = useState<UserActivityLog[]>(() => {
     try {
       const stored = localStorage.getItem('rkinfinity_user_activities');
-      return stored ? JSON.parse(stored) : DEFAULT_ACTIVITIES;
+      if (!stored) return [];
+      const parsed = JSON.parse(stored) as UserActivityLog[];
+      const seededIds = ['act_1', 'act_2', 'act_3', 'act_4'];
+      const cleaned = parsed.filter((activity) => !seededIds.includes(activity.id));
+      localStorage.setItem('rkinfinity_user_activities', JSON.stringify(cleaned));
+      return cleaned;
     } catch {
-      return DEFAULT_ACTIVITIES;
+      localStorage.removeItem('rkinfinity_user_activities');
+      return [];
     }
   });
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('rkinfinity_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('rkinfinity_user');
-    }
+    if (user) localStorage.setItem('rkinfinity_user', JSON.stringify(user));
+    else localStorage.removeItem('rkinfinity_user');
   }, [user]);
 
   useEffect(() => {
@@ -107,33 +82,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('rkinfinity_user_activities', JSON.stringify(activities));
   }, [activities]);
 
-  const login = (email: string, name?: string) => {
-    const loggedInUser: UserProfile = {
-      ...DEFAULT_USER,
-      email: email || DEFAULT_USER.email,
-      name: name || (email && email.includes('@') ? email.split('@')[0] : DEFAULT_USER.name),
+  const logActivity = (action: string, target: string, type: 'bookmark' | 'note' | 'search' | 'inquiry') => {
+    const newActivity: UserActivityLog = {
+      id: `act_${Date.now()}`,
+      action,
+      target,
+      timestamp: 'Just now',
+      type,
     };
-    setUser(loggedInUser);
-    logActivity('User Logged In', 'Active Session', 'search');
+    setActivities((prev) => [newActivity, ...prev].slice(0, 16));
+  };
+
+  const login = (email: string, name?: string) => {
+    const cleanEmail = email.trim();
+    if (!cleanEmail) return;
+    const derivedName = name?.trim() || cleanEmail.split('@')[0] || 'Member';
+    setUser({
+      id: `usr_${Date.now()}`,
+      name: derivedName,
+      email: cleanEmail,
+      avatarUrl: '',
+      accountType: 'Member',
+      joinedDate: today(),
+      bio: '',
+    });
+    logActivity('Signed In (Demo)', 'Local demo session', 'search');
   };
 
   const register = (name: string, email: string) => {
-    const newUser: UserProfile = {
+    const cleanName = name.trim();
+    const cleanEmail = email.trim();
+    if (!cleanName || !cleanEmail) return;
+    setUser({
       id: `usr_${Date.now()}`,
-      name: name || 'Raihan',
-      email: email || 'raihan@rkinfinity.ai',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      accountType: 'Pro Member',
-      joinedDate: 'October 2026',
-      bio: 'Exploring artificial intelligence capabilities on RKInfinity AI Hub.',
-    };
-    setUser(newUser);
-    logActivity('Account Created', 'Profile Registered', 'search');
+      name: cleanName,
+      email: cleanEmail,
+      avatarUrl: '',
+      accountType: 'Member',
+      joinedDate: today(),
+      bio: '',
+    });
+    logActivity('Registered (Demo)', 'Local demo session', 'search');
   };
 
-  const logout = () => {
-    setUser(null);
-  };
+  const logout = () => setUser(null);
 
   const updateProfile = (updated: Partial<UserProfile>) => {
     setUser((prev) => (prev ? { ...prev, ...updated } : null));
@@ -141,38 +133,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addNote = (note: Omit<PersonalNote, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const today = new Date().toISOString().split('T')[0];
+    const date = today();
     const newNote: PersonalNote = {
       ...note,
       id: `note_${Date.now()}`,
-      createdAt: today,
-      updatedAt: today,
+      createdAt: date,
+      updatedAt: date,
     };
     setNotes((prev) => [newNote, ...prev]);
     logActivity('Created Personal Note', newNote.title, 'note');
   };
 
   const updateNote = (id: string, updated: Partial<PersonalNote>) => {
-    const today = new Date().toISOString().split('T')[0];
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, ...updated, updatedAt: today } : n))
-    );
+    setNotes((prev) => prev.map((note) => note.id === id ? { ...note, ...updated, updatedAt: today() } : note));
   };
 
   const deleteNote = (id: string) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+    setNotes((prev) => prev.filter((note) => note.id !== id));
     logActivity('Deleted Personal Note', id, 'note');
-  };
-
-  const logActivity = (action: string, target: string, type: 'bookmark' | 'note' | 'search' | 'inquiry') => {
-    const newAct: UserActivityLog = {
-      id: `act_${Date.now()}`,
-      action,
-      target,
-      timestamp: 'Just now',
-      type,
-    };
-    setActivities((prev) => [newAct, ...prev.slice(0, 15)]);
   };
 
   const resetWorkspaceData = () => {
@@ -180,29 +158,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('rkinfinity_user_notes');
     localStorage.removeItem('rkinfinity_user_activities');
     localStorage.removeItem('rkinfinity_saved_tools');
-    setUser(DEFAULT_USER);
-    setNotes(DEFAULT_NOTES);
-    setActivities(DEFAULT_ACTIVITIES);
+    setUser(null);
+    setNotes([]);
+    setActivities([]);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout,
-        updateProfile,
-        notes,
-        addNote,
-        updateNote,
-        deleteNote,
-        activities,
-        logActivity,
-        resetWorkspaceData,
-      }}
-    >
+    <AuthContext.Provider value={{
+      user, isAuthenticated: !!user, login, register, logout, updateProfile,
+      notes, addNote, updateNote, deleteNote, activities, logActivity, resetWorkspaceData,
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -210,8 +175,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
