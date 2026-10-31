@@ -30,13 +30,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Workspace Active · {user?.accountType || 'Pro Member'}</span>
+              <span>{user ? 'Workspace Active' : 'Guest Preview'}</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Welcome back, <span className="bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">{user?.name || 'Raihan'}</span>!
+              Welcome back, <span className="bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">{user?.name || 'Guest'}</span>!
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Your personalized AI directory hub is synchronized. You have <strong className="text-white">{savedToolIds.length} favorited tools</strong> and <strong className="text-white">{notes.length} personal notes</strong> stored in your workspace.
+              Explore the AI directory. Save tools and create notes to personalize this workspace. You currently have <strong className="text-white">{savedToolIds.length} favorited tools</strong> and <strong className="text-white">{notes.length} personal notes</strong> stored in your workspace.
             </p>
           </div>
 
@@ -93,8 +93,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
         <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Account Tier</span>
-            <span className="text-sm font-bold text-slate-200 mt-0.5 block">{user?.accountType || 'Pro Member'}</span>
+            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Session</span>
+            <span className="text-sm font-bold text-slate-200 mt-0.5 block">{user ? 'Member' : 'Guest'}</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
             <ShieldCheck className="w-5 h-5" />
